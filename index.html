@@ -10,11 +10,37 @@
 	<h1>My First Heading</h1>
 	<p>My first paragraph.</p>
 
-	<form action = "https://api.particle.io/v1/devices/480025000e504b464d323520/led?access_token=2914fec95e7f2ed423645e2d456604076901a3fd" method="POST">
-		<label for="status">Status</label>
-		<input id="status" type="text" name="arg">
-		<button type="submit">Run</button>
+	<form name="myForm" method="POST" id="myFormId">
+		<p>Device ID:<input id="deviceId" name="myCoreID" size=50 value="480025000e504b464d323520"> <br> Get this from the core area when logged in<br></p>
+		<p>Access Token:<input id="access_token" name="myCoreID" type=password size=50 value="2914fec95e7f2ed423645e2d456604076901a3fd"> <br> Get this from the core area when logged in<br></p>
 	</form>
 
+	<button type="button" onclick="getParticle('on')">Turn Led On</button>
+	<button type="button" onclick="getParticle('on')">Turn Led Off</button>
+
+	<p id="Response"></p>
+
 </body>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+	function getParticle(input){
+		var coreID = document.all.deviceId.value;
+		var accessToken = document.all.access_token.value;
+		var url = "https://api.spark.io/v1/devices/" + coreID + "/led";
+	
+        $.ajax({
+			type: "POST",
+			url: url,
+			data: {
+				access_token: accessToken,
+				args: input
+			},
+			success: (data) => {console.log(data);document.getElementById(Response).innerHTML= data},
+	    });
+	}
+
+</script>
+
 </html>
