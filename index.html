@@ -15,10 +15,15 @@
 		<p>Access Token:<input id="access_token" name="myCoreID" type=password size=50 value="2914fec95e7f2ed423645e2d456604076901a3fd"> <br> Get this from the core area when logged in<br></p>
 	</form>
 
-	<button type="turnLedOnButton" onclick="getParticle('on')">Turn Led On</button>
-	<button type="turnLedOffButton" onclick="getParticle('off')">Turn Led Off</button>
+	<button type="turnLedOnButton" onclick="getParticle('on', 'led')">Turn Led On</button>
+	<button type="turnLedOffButton" onclick="getParticle('off', 'led')">Turn Led Off</button>
+	<br><br>
+	<button type="dispenseButton" onclick="getParticle('true', 'dispense')">Dispense Salt</button>
+	<button type="updatePressureButton" onclick="getParticle('value', 'update')">Update Pressure Sensor Value</button>
 
 	<p id="Response">Led has not been updated</p>
+	<br>
+	<p id="Pressure Value">Pressure Value</p>
 
 </body>
 
@@ -26,10 +31,10 @@
 <!-- <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet"> -->
 <script type="text/javascript">
 
-	function getParticle(input){
+	function getParticle(input, func){
 		var coreID = document.all.deviceId.value;
 		var accessToken = document.all.access_token.value;
-		var url = "https://api.spark.io/v1/devices/" + coreID + "/led";
+		var url = "https://api.spark.io/v1/devices/" + coreID + "/" + func;
 	
         $.ajax({
 			type: "POST",
@@ -40,10 +45,18 @@
 			},
 			success: (data) => {
 				console.log(data);
-				if(data.return_value == 1)
-					document.getElementById("Response").innerHTML = "Led is On";
-				else
-					document.getElementById("Response").innerHTML = "Led is Off";},
+				if (func = 'led'){
+					if (data.return_value == 1)
+						document.getElementById("Response").innerHTML = "Led is On";
+					else
+						document.getElementById("Response").innerHTML = "Led is Off";
+				} else if (func = 'dispense'){
+					document.getElementById("Response").innerHTML = "Salt has been dispensed";
+				} else if(func = 'update'){
+					document.getElementById("Response").innerHTML = "Pressure Value has been updated";
+					document.getElementById("Pressure Value").innerHTML = data.return_value;
+				}
+			},
 	    });
 	}
 
